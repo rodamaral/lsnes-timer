@@ -35,7 +35,7 @@ Examples
 ========
 
 ```lua
-local timer = require'timeout'
+local timer = require'timer'
 local clock = timer.get_instance()
 
 clock:set_timeout(function() print(1) end, 1000) -- prints `1` once after 1 second
