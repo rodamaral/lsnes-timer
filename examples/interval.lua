@@ -5,7 +5,7 @@ end
 
 local script_name = get_script_name()
 local root = resolve_filename('../', script_name)
-package.path = root .. '/?.lua;' .. root .. '/?/init.lua'
+package.path = root .. '/src/?.lua;' .. root .. '/src/?/init.lua'
 
 local timer = require 'timer'
 local set_interval = timer.set_interval

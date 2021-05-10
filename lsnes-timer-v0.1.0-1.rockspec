@@ -17,8 +17,8 @@ dependencies = {"lua >= 5.1"}
 build = {
     type = "builtin",
     modules = {
-        ["timer"] = "src/init.lua",
-        ["timer.pool"] = "src/pool.lua",
-        ["timer.utils"] = "src/utils.lua"
+        ["timer"] = "src/timer/init.lua",
+        ["timer.pool"] = "src/timer/pool.lua",
+        ["timer.utils"] = "src/timer/utils.lua"
     }
 }
