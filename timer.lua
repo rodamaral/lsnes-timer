@@ -1,20 +1,23 @@
 local set_timer_timeout = _G.set_timer_timeout
 local pool = require 'timer.pool'
 local get_current_microseconds = require'timer.utils'.get_current_microseconds
+local pack = table.pack or _G.pack
+local unpack = table.unpack or _G.unpack
 
 -- singleton pattern
 local M = {lastId = 0, pool = pool.new()}
 
 _G.callback.timer:register(function() M.pool:execute() end)
 
-function M.set_timeout(callback, microseconds, is_interval)
+function M._set_timer(callback, microseconds, is_interval, ...)
     local time = microseconds * 1000
+    local args = pack(...)
     local current_time = get_current_microseconds()
     local time_execution = current_time + time
     local lastId = M.lastId
     M.pool:insert({
         time_execution = time_execution,
-        callback = callback,
+        callback = function() callback(unpack(args)) end,
         id = lastId,
         is_interval = is_interval,
         interval = time
@@ -45,16 +48,21 @@ function M.update(id, microseconds)
     if min then set_timer_timeout(min - current_time) end
 end
 
-function M.set_interval(callback, time)
-    return M.set_timeout(callback, time, true)
+function M.set_timeout(callback, time, ...)
+    return M._set_timer(callback, time, false, ...)
 end
 
-function M.debounce(callback, time)
+function M.set_interval(callback, time, ...)
+    return M._set_timer(callback, time, true, ...)
+end
+
+function M.debounce(callback, time, ...)
     local pending = false
     local id = nil
+    local args = pack(...)
 
     local function do_callback_and_release()
-        callback()
+        callback(unpack(args))
         pending = false
     end
 
