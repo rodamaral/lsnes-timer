@@ -78,6 +78,23 @@ function M.debounce(callback, time, ...)
     return debounced
 end
 
+function M.throttle(callback, time, ...)
+    local expired = true
+    local args = pack(...)
+
+    local function release() expired = true end
+
+    local function throttled()
+        if expired then
+            callback(unpack(args))
+            expired = false
+            M.set_timeout(release, time)
+        end
+    end
+
+    return throttled
+end
+
 function M.debug()
     print '\nDEBUG:\n'
     print(M.lastId)
