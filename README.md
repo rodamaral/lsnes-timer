@@ -1,48 +1,68 @@
-lsnes-timer
-========
+# lsnes-timer
 
-`lsnes-timer` is a class that provides methods for executing a Lua functions at desired times.
-It uses lsnes functionality internally and exposes a more user-friendly, habitual API.
+`lsnes-timer` is a module that provides static methods for executing Lua
+functions at desired times. It uses lsnes functionality internally and
+exposes a more user-friendly, habitual API.
 
+# API
 
-API
-===
+`local timer = require 'timer'`
 
+Requires the library.
 
-`local clock = timer.get_instance()`
-Creates a clock instance with timing methods. Notice that this object is a singleton instance due to limitations of the lsnes timer functions.
+`local id = timer.set_timeout(callback, microseconds[, ...arguments])`
 
-`local id = clock:set_timeout(callback, microseconds)`
-Sets a timer which executes a function once the timer expires.
-Returns an unique timeout id so you can remove it later by calling `clear_timeout`.
+Sets a timer which executes a function once the timer expires. Returns
+an unique timeout id so you can remove it later by calling
+`clear_timeout`.
 
-`clock:set_interval(callback, time)`
-repeatedly calls a function or executes a code snippet, with a fixed time delay between each call.
-Returns an unique interval id so you can remove it later by calling `clear_timeout`.
+`local id = timer.set_interval(callback, time)`
 
-`clock:clear_timeout(id)`
-Cancels a timeout previously established by calling `set_timeout` or timed, repeating action which was previously established by a call to `set_interval`.
+Repeatedly calls a function or executes a code snippet, with a fixed
+time delay between each call. Returns an unique interval id so you can
+remove it later by calling `clear_interval`.
 
-`clock:update(id, microseconds)`
-Updates a timeout or interval with a (possibly) new value. In each case, the current timeout is reset.
+`timer.clear_timeout(id)`
 
-`clock:get_debounced(callback, time)`
-Creates a debounced function that delays invoking the `callback` until after `time` milliseconds have elapsed since the last time the debounced function was invoked.
+Cancels a timeout previously established by calling `set_timeout`.
 
-*TODO*: create throttle.
+`timer.clear_timeout(id)`
 
-Examples
-========
+Cancels an interval previously established by calling `set_interval`.
 
-```lua
+It’s worth noting that the pool of IDs used by set\_timeout() and
+set\_interval() are shared, which means you can technically use
+clear\_timeout() and clear\_interval() interchangeably. However, for
+clarity, you should avoid doing so.
+
+`timer.update(id, microseconds)`
+
+Updates a timeout or interval with a (possibly) new value. In each case,
+the current timeout is reset.
+
+`timer.debounce(callback, time[, ...arguments])`
+
+Creates a debounced function that delays invoking the `callback` until
+after `time` milliseconds have elapsed since the last time the debounced
+function was invoked.
+
+`timer.throttle(callback, time[, ...arguments])`
+
+Creates a throttled function that only invokes the `callback` at most
+once per every `time` milliseconds.
+
+# Examples
+
+``` lua
 local timer = require'timer'
-local clock = timer.get_instance()
+local set_timeout = timer.set_timeout
+local set_interval = timer.set_interval
 
-clock:set_timeout(function() print(1) end, 1000) -- prints `1` once after 1 second
-clock:set_interval(function() print(2) end, 2000) -- prints `2` every 2 seconds after
+set_timeout(function() print(1) end, 1000) -- prints `1` once after 1 second
+set_interval(print, 2000, 2, 'custom args') -- prints `2	custom args` every 2 seconds after
 
 local num = 0
-clock:set_interval(function()
+set_interval(function()
     num = num + 1;
     gui.repaint()
 end, 100)
@@ -51,20 +71,21 @@ callback.register('paint', function()
 end)
 ```
 
-Gotchas / Warnings
-==================
+# Gotchas / Warnings
 
-* `lsnes-timer` depends on lsnes global function `set_timer_timeout`. Calling this function outside this library may cause issues for this lib and for the other code. Therefore, if you use this library, schedule all timers using the provided methods instead of using lsnes API directly.
-* lsnes global `on_timer` event callback will be called everytime a callback is executed.
+- `lsnes-timer` depends on lsnes global function `set_timer_timeout`.
+  Calling this function outside this library may cause issues for this
+  lib and for the other code. Therefore, if you use this library,
+  schedule all timers using the provided methods instead of using lsnes
+  API directly.
+- lsnes global `on_timer` event callback will be called everytime a
+  callback is executed.
 
+# Installation
 
-Installation
-============
+Just copy the `timer.lua` file somewhere in your project and require it
+accordingly.
 
-Just copy the `timer.lua` file somewhere in your project and require it accordingly.
-
-
-Specs
-=====
+# Specs
 
 TODO
