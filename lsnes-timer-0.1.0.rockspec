@@ -1,8 +1,8 @@
 package = "lsnes-timer"
-version = "v0.1.0"
+version = "0.1.0"
 source = {
     url = "git+ssh://git@github.com/rodamaral/lsnes-timer.git",
-    tag = "v0.1.0"
+    tag = "0.1.0"
 }
 description = {
     summary = "lsnes-timer provides methods for executing Lua functions at desired times.",
