@@ -38,6 +38,8 @@ function M.clear_timeout(id)
     return M.pool:remove(id)
 end
 
+M.clear_interval = M.clear_timeout
+
 function M.update(id, microseconds)
     local time = microseconds * 1000
     local current_time = get_current_microseconds()
