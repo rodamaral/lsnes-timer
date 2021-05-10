@@ -4,7 +4,17 @@
 functions at desired times. It uses lsnes functionality internally and
 exposes a more user-friendly, habitual API.
 
-# API
+⚠️ This is a **Work in Progress** (beta) yet, therefore API changes
+might occur. Suggestions and feedback are welcome.
+
+# 📦 Installation
+
+Use [luarocks](https://luarocks.org) to install this package, either
+globally, locally or in a custom location inside your project.
+
+`luarocks install lsnes-timer`
+
+# 🚀 API
 
 `local timer = require 'timer'`
 
@@ -71,7 +81,7 @@ callback.register('paint', function()
 end)
 ```
 
-# Gotchas / Warnings
+# ⚠️ Gotchas / Warnings
 
 - `lsnes-timer` depends on lsnes global function `set_timer_timeout`.
   Calling this function outside this library may cause issues for this
@@ -80,11 +90,6 @@ end)
   API directly.
 - lsnes global `on_timer` event callback will be called everytime a
   callback is executed.
-
-# Installation
-
-Just copy the `timer.lua` file somewhere in your project and require it
-accordingly.
 
 # Specs
 
